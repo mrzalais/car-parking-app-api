@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -32,6 +33,10 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Parking whereUserId($value)
  * @method static Builder|Parking whereVehicleId($value)
  * @method static Builder|Parking whereZoneId($value)
+ * @property-read Vehicle $vehicle
+ * @property-read Zone $zone
+ * @method static Builder|Parking active()
+ * @method static Builder|Parking stopped()
  * @mixin Eloquent
  */
 class Parking extends Model
@@ -44,4 +49,31 @@ class Parking extends Model
         'start_time' => 'datetime',
         'stop_time' => 'datetime',
     ];
+
+    public function zone(): BelongsTo
+    {
+        return $this->belongsTo(Zone::class);
+    }
+
+    public function vehicle(): BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->whereNull('stop_time');
+    }
+
+    public function scopeStopped($query)
+    {
+        return $query->whereNotNull('stop_time');
+    }
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('user', function (Builder $builder) {
+            $builder->where('user_id', auth()->id());
+        });
+    }
 }
