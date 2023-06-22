@@ -10,6 +10,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @group Vehicles
+ */
 class VehicleController extends Controller
 {
     public function index(): AnonymousResourceCollection
