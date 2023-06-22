@@ -36,6 +36,7 @@ class ParkingResource extends JsonResource
             ],
             'start_time' => $this->start_time->toDateTimeString(),
             'stop_time' => $this->stop_time?->toDateTimeString(),
+            'total_price' => $totalPrice,
         ];
     }
 }
